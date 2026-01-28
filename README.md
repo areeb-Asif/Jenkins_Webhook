@@ -1,4 +1,4 @@
-echo "# Jenkins_Webhook" >> README.md
+# Jenkins_Webhook" 
 git init
 git add README.md
 git commit -m "first commit"
