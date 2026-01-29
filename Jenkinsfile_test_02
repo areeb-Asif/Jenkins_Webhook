@@ -1,0 +1,18 @@
+pipeline {
+    agent any 
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+
+            }
+        }
+        stage('Hello Jenkins') {
+            steps {
+                echo 'hello Jenkins file 2'
+                sh 'uname -aux'
+                sh 'which jenkins'
+            }
+            }
+        }
+    }
