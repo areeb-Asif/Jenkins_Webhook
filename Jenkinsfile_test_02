@@ -10,7 +10,7 @@ pipeline {
         stage('Hello Jenkins') {
             steps {
                 echo 'hello Jenkins file 2'
-                sh 'uname -aux'
+                sh 'uname -n'
                 sh 'which jenkins'
             }
             }
