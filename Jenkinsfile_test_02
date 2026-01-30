@@ -11,7 +11,7 @@ pipeline {
             steps {
                 echo 'hello Jenkins file 2'
                 sh 'uname -n'
-                sh 'which jenkins'
+                sh 'ls -la'
             }
             }
         }
