@@ -22,8 +22,8 @@ pipeline {
                     // Using secret text credential `ghcr_token` (token only)
                     withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
                         sh 'echo $TOKEN | docker login ghcr.io -u areeb-asif --password-stdin'
-                        sh 'docker tag my-test-image:v1 ghcr.io/areeb-asif/my-test-image:v1'
-                        sh 'docker push ghcr.io/areeb-asif/my-test-image:v1'
+                        sh 'docker tag my-test-image:v1 ghcr.io/areeb-asif/my-test-image:v2'
+                        sh 'docker push ghcr.io/areeb-asif/my-test-image:v2'
                     }
                 }
             }
