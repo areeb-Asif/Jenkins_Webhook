@@ -21,6 +21,14 @@ pipeline {
                 checkout scm
             }
         }
+            stage('docker run container') {       
+                steps {
+                    sh '''
+                    docker --version
+                    docker run -d --name ${CONTAINER} -p 8080:80 nginx:alpine
+                    '''
+                }
+            }
             stage('Build Docker ${IMAGE_NAME}') {       
                 steps {
                     sh 'docker --version'             
