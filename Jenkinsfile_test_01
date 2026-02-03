@@ -1,18 +1,18 @@
 pipeline {
     agent any 
     stages {
-        stage{'Checkout'} {
+        stage('Checkout') {
             steps {
                 checkout scm
             }
-        stage('Build Docker Image') {       
-            steps {
-                sh 'docker --version'             
-                sh 'docker build -t my-test-image:v1 .'
-                sh 'docker images my-test-image:v1'
-                sh 'docker tag my-test-image:v1 asifmuzammil/my-test-image:v1'
-            }
-       
+        }
+            stage('Build Docker Image') {       
+                steps {
+                    sh 'docker --version'             
+                    sh 'docker build -t my-test-image:v1 .'
+                    sh 'docker images my-test-image:v1'
+                    sh 'docker tag my-test-image:v1 asifmuzammil/my-test-image:v1'
+                }
             }
         }
     }
