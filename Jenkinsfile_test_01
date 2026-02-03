@@ -8,8 +8,12 @@ pipeline {
     stages {
         stage('stop and remove old container') {
             steps {
-                sh 'docker ps -aq | xargs -r docker stop'
-                sh 'docker ps -aq | xargs -r docker rm'
+              sh '''
+                set +e
+                docker ps -aq | xargs -r docker stop
+                docker ps -aq | xargs -r docker rm
+                set -e
+            '''
             }
         }
         stage('Checkout') {
