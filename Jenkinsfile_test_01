@@ -1,54 +1,59 @@
 pipeline {
-    agent any
-    environment {
-        IMAGE_NAME = 'my-test-image'
-        IMAGE_TAG = 'v1'
-        CONTAINER = 'my-test-container'
-    }    
-    stages {
-        stage('stop and remove old container') {
-            steps {
-              sh '''
-                set +e
-                docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker stop
-                docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker rm
-                set -e
-            '''
-            }
-        }
-        stage('Checkout') {
-            steps {
-                checkout scm
-            }
-        }
-            stage('docker run container') {       
-                steps {
-                    sh '''
-                    docker --version
-                    docker run -d --name ${CONTAINER} -p 8090:80 nginx:alpine
-                    '''
-                }
-            }
-            stage('Build Docker ${IMAGE_NAME}') {       
-                steps {
-                    sh 'docker --version'             
-                    sh "docker build -t ${IMAGE_NAME}:${IMAGE_TAG} ."
-                    sh "docker images ${IMAGE_NAME}"
-                    //sh 'docker tag my-test-image:v1 asifmuzammil/my-test-image:v1'
-                    sh "docker run -d -p 8090:80 ${IMAGE_NAME}:${IMAGE_TAG}"
-                    
-                }
-            }
-            
-            stage("push docker image to ghcr.io") {
-                steps {
-                    // Using secret text credential `ghcr_token` (token only)
-                    withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
-                        sh 'echo $TOKEN | docker login ghcr.io -u areeb-asif --password-stdin'
-                        sh "docker tag ${IMAGE_NAME}:${IMAGE_TAG} ghcr.io/areeb-asif/${IMAGE_NAME}:${IMAGE_TAG}"
-                        sh "docker push ghcr.io/areeb-asif/${IMAGE_NAME}:${IMAGE_TAG}"
-                    }
-                }
-            }
+  agent any
+
+  environment {
+    IMAGE_NAME = "my-test-image"
+    IMAGE_TAG  = "v1"
+    CONTAINER  = "my-test-container"
+  }
+
+  stages {
+    stage('Checkout') {
+      steps {
+        checkout scm
+      }
     }
+
+    stage('Stop & Remove Old Container') {
+      steps {
+        sh '''
+          set +e
+          docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker stop
+          docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker rm
+          set -e
+        '''
+      }
+    }
+
+    stage('Build Docker Image') {
+      steps {
+        sh '''
+          docker --version
+          docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+          docker images ${IMAGE_NAME}:${IMAGE_TAG}
+        '''
+      }
+    }
+
+    stage('Run Container') {
+      steps {
+        sh '''
+          docker run -d --name ${CONTAINER} -p 8090:80 ${IMAGE_NAME}:${IMAGE_TAG}
+          docker ps --filter "name=${CONTAINER}"
+        '''
+      }
+    }
+
+    stage('Push Docker Image to ghcr.io') {
+      steps {
+        withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
+          sh '''
+            echo "$TOKEN" | docker login ghcr.io -u areeb-asif --password-stdin
+            docker tag ${IMAGE_NAME}:${IMAGE_TAG} ghcr.io/areeb-asif/${IMAGE_NAME}:v2
+            docker push ghcr.io/areeb-asif/${IMAGE_NAME}:v2
+          '''
         }
+      }
+    }
+  }
+}
