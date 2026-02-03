@@ -4,4 +4,4 @@ FROM nginx:alpine
 EXPOSE 80
 
 # Add test content
-RUN echo '<h1>Jenkins Test OK</h1>' > /usr/share/nginx/html/index.html
+RUN echo '<h1>Jenkins Test With Env OK</h1>' > /usr/share/nginx/html/index.html
