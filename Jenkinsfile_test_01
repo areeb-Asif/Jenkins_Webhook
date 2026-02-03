@@ -10,8 +10,8 @@ pipeline {
             steps {
               sh '''
                 set +e
-                docker ps -aq | xargs -r docker stop
-                docker ps -aq | xargs -r docker rm
+                docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker stop
+                docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker rm
                 set -e
             '''
             }
