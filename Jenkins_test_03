@@ -5,7 +5,7 @@ pipeline {
         IMAGE_NAME = 'my-test-image'
         IMAGE_TAG = 'v1'
         CONTAINER = 'my-test-container'
-        REGISTRY = 'ghcr.io/asif-areeb'
+        REGISTRY = 'ghcr.io/areeb-asif'
         PUSH_TAG = "${BUILD_NUMBER}"
         //BRANCH_NAME='main'
     }
