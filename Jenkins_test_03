@@ -67,17 +67,7 @@ pipeline {
         }
 
     }
-
-
     post{
-        always {
-            sh '''
-            set +e
-            docker rm -f ${CONTAINER} 2>/dev/null || true
-            set -e
-            '''
-        }
-    }    post{
         always {
             sh '''
             set +e
