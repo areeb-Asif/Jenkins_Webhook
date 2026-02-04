@@ -9,16 +9,17 @@ pipeline {
     }
     options {
         timestamps()
+        skipDefaultCheckout(true)
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '20'))
     }
 
     stages {
-        stage ('Checkout') {
+        /*stage ('Checkout') {
             steps {
                 checkout scm
             }
-        }
+        }*/
         stage ('Stop & Remove Old Container') {
             steps {
                 sh '''
@@ -48,8 +49,8 @@ pipeline {
         stage('Smoke Test') {
             steps {
                 sh '''
-                sleep 10
-                curl -f http://localhost:8090 || exit 1
+                sleep 3
+                docker exec my-test-container wget -qO- http://localhost:80 | grep -q "Jenkins Test With Env OK"1
                 '''
             }
         }
