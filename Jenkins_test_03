@@ -82,7 +82,7 @@ pipeline {
     }
     post{
         always {
-            sh '''
+        sh '''
             set +e
             docker rm -f ${CONTAINER} 2>/dev/null || true
             set -e
