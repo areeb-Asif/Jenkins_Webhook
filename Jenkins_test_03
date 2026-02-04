@@ -56,11 +56,11 @@ pipeline {
             }
         }
         
-        stage('Debug Branch') {
+        /*stage('Debug Branch') {
             steps {
             sh 'env | grep -E "BRANCH|GIT"'
              }
-        } 
+        } */
 
         stage('Push Docker Image to ghcr.io') {
             when { 
