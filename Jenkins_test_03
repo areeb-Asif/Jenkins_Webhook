@@ -56,8 +56,8 @@ pipeline {
         }
         stage('Push Docker Image to ghcr.io') {
             when { 
-                expression 
-                  env.BRANCH_NAME == 'origin/main' 
+                expression {
+                  env.BRANCH_NAME == 'origin/main' }
              }
             steps {
                 withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
