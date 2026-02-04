@@ -6,6 +6,7 @@ pipeline {
         CONTAINER = 'my-test-container'
         REGISTRY = 'ghcr.io/asif-areeb'
         PUSH_TAG = '${BUILD_NUMBER}'
+        BRANCH_NAME='main'
     }
     options {
         timestamps()
@@ -54,6 +55,13 @@ pipeline {
                 '''
             }
         }
+        
+        stage('Debug Branch') {
+            steps {
+            sh 'env | grep -E "BRANCH|GIT"'
+             }
+        } 
+
         stage('Push Docker Image to ghcr.io') {
             when { 
                 expression {
