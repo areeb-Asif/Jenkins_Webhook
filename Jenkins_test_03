@@ -56,16 +56,16 @@ pipeline {
             }
         }
         
-        /*stage('Debug Branch') {
-            steps {
-            sh 'env | grep -E "BRANCH|GIT"'
-             }
-        } */
+        stage('Debug Branch Vars') {
+          steps {
+            sh 'echo "BRANCH_NAME=$BRANCH_NAME"; echo "GIT_BRANCH=$GIT_BRANCH"'
+            }
+        }       
 
         stage('Push Docker Image to ghcr.io') {
             when { 
                 expression {
-                    
+
                    (env.BRANCH_NAME == 'main') || (env.GIT_BRANCH == 'origin/main') }
              }
             steps {
