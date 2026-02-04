@@ -46,14 +46,14 @@ pipeline {
                 '''
             }
         }
-        /*stage('Smoke Test') {
+        stage('Smoke Test') {
             steps {
                 sh '''
                 sleep 3
-                docker exec my-test-container wget -qO- http://localhost:80 | grep -q "Jenkins Test With Env OK"1
+                docker exec my-test-container wget -qO- http://localhost:80 | grep -q "Jenkins Test With Env OK"
                 '''
             }
-        }*/
+        }
         stage('Push Docker Image to ghcr.io') {
             steps {
                 when{ branch 'main' }
