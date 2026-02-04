@@ -4,7 +4,7 @@ pipeline {
         IMAGE_NAME = 'my-test-image'
         IMAGE_TAG = 'v1'
         CONTAINER = 'my-test-container'
-        REGISTRY = 'ghcr.io/asif-areeb'
+        REGISTRY = 'ghcr.io/asif-Areeb'
         PUSH_TAG = "${BUILD_NUMBER}"
         //BRANCH_NAME='main'
     }
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
                     sh '''
-                    echo "$TOKEN" | docker login ghcr.io -u asif-areeb --password-stdin
+                    echo "$TOKEN" | docker login ghcr.io -u asif-Areeb --password-stdin
                     docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:${PUSH_TAG}
                     docker push ${REGISTRY}/${IMAGE_NAME}:${PUSH_TAG}
                    '''
