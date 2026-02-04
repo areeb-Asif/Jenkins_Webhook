@@ -56,7 +56,7 @@ pipeline {
         }
         stage('Push Docker Image to ghcr.io') {
             steps {
-                when{ branch 'main' }
+                when { branch 'main' }
                 withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
                     sh '''
                     echo "$TOKEN" | docker login ghcr.io -u asif-areeb --password-stdin
