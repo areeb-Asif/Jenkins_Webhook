@@ -1,0 +1,89 @@
+pipeline {
+    agent any
+    environment {
+        IMAGE_NAME = 'my-test-image'
+        IMAGE_TAG = 'v1'
+        CONTAINER = 'my-test-container'
+        REGISTRY = 'ghcr.io/asif-areeb'
+        PUSH_TAG = '${BUILD_NUMBER}'
+    }
+    options {
+        timestamps()
+        disableConcurrentBuilds()
+        buildDiscarder(logRotator(numToKeepStr: '20'))
+    }
+
+    stages {
+        stage ('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+        stage ('Stop & Remove Old Container') {
+            steps {
+                sh '''
+                    set +e
+                    docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker stop
+                    docker ps -aq --filter "name=${CONTAINER}" | xargs -r docker rm
+                    set -e
+                '''
+            }
+        }
+        stage ('Build Docker Image') {
+            steps {
+                sh '''
+                docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+                docker images ${IMAGE_NAME}:${IMAGE_TAG}
+                '''
+            }
+        }
+        stage ('Run Container') {
+            steps {
+                sh '''
+                docker run -d --name ${CONTAINER} -p 8090:80 ${IMAGE_NAME}:${IMAGE_TAG}
+                docker ps --filter "name=${CONTAINER}"
+                '''
+            }
+        }
+        stage('Smoke Test') {
+            steps {
+                sh '''
+                sleep 10
+                curl -f http://localhost:8090 || exit 1
+                '''
+            }
+        }
+        stage('Push Docker Image to ghcr.io') {
+            steps {
+                when{ branch 'main' }
+                withCredentials([string(credentialsId: 'ghcr_token', variable: 'TOKEN')]) {
+                    sh '''
+                    echo "$TOKEN" | docker login ghcr.io -u asif-areeb --password-stdin
+                    docker tag ${IMAGE_NAME}:${IMAGE_TAG} ${REGISTRY}/${IMAGE_NAME}:${PUSH_TAG}
+                    docker push ${REGISTRY}/${IMAGE_NAME}:${PUSH_TAG}
+                   '''
+                }
+            }
+        }
+
+    }
+
+
+    post{
+        always {
+            sh '''
+            set +e
+            docker rm -f ${CONTAINER} 2>/dev/null || true
+            set -e
+            '''
+        }
+    }    post{
+        always {
+            sh '''
+            set +e
+            docker rm -f ${CONTAINER} 2>/dev/null || true
+            set -e
+            '''
+        }
+    }
+}
