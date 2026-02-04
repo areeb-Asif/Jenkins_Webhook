@@ -10,17 +10,17 @@ pipeline {
     }
     options {
         timestamps()
-        skipDefaultCheckout(true)
+        //skipDefaultCheckout()
         disableConcurrentBuilds()
         buildDiscarder(logRotator(numToKeepStr: '20'))
     }
 
     stages {
-        /*stage ('Checkout') {
+        stage ('Checkout') {
             steps {
                 checkout scm
             }
-        }*/
+        }
         stage ('Stop & Remove Old Container') {
             steps {
                 sh '''
@@ -58,7 +58,7 @@ pipeline {
         
         stage('Debug Branch Vars') {
           steps {
-            sh 'echo "BRANCH_NAME=$BRANCH_NAME"; echo "GIT_BRANCH=$GIT_BRANCH"'
+            sh 'echo "BRANCH_NAME=$BRANCH_NAME" ; echo "GIT_BRANCH=$GIT_BRANCH"'
             }
         }       
 
