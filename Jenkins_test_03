@@ -5,8 +5,8 @@ pipeline {
         IMAGE_TAG = 'v1'
         CONTAINER = 'my-test-container'
         REGISTRY = 'ghcr.io/asif-areeb'
-        PUSH_TAG = '${BUILD_NUMBER}'
-        BRANCH_NAME='main'
+        PUSH_TAG = "${BUILD_NUMBER}"
+        //BRANCH_NAME='main'
     }
     options {
         timestamps()
